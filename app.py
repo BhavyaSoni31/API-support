@@ -1,6 +1,17 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import streamlit as st
 from streamlit_chat import message
 from utils import get_retriever, get_relevent_docs, get_valid_documents, generate_answer, check_hellucincation
+import logging
+
+# Configure logging
+logging.basicConfig(
+    format="%(asctime)s - %(message)s",
+    level=logging.INFO
+)
 
 # Function to handle chatbot responses
 def chatbot_response(user_input):
@@ -15,7 +26,7 @@ def chatbot_response(user_input):
         else:
             return f"Hellucination detected: {answer}"
     except Exception as ex:
-        print(f"Error occurred while processing your query. Error: {ex}")
+        logging.error(f"Error occurred while processing your query. Error: {ex}")
         return f"Error occurred while processing your query. Try different question."
 
 # Streamlit app setup
